@@ -1,0 +1,21 @@
+{
+  "name": "wetube_again",
+  "version": "1.0.0",
+  "description": "nooooo",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DdooBuggy/weTube_again.git"
+  },
+  "author": "me",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DdooBuggy/weTube_again/issues"
+  },
+  "homepage": "https://github.com/DdooBuggy/weTube_again#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
