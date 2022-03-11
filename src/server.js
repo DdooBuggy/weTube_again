@@ -15,6 +15,7 @@ app.set("views", process.cwd() + "/src/views");
 
 // middlewares
 app.use(logger);
+app.use(express.urlencoded({ extended: true }));
 
 // routers
 app.use("/", globalRouter);

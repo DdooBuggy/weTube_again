@@ -4,20 +4,14 @@ html(lang="ko")
         title #{pageTitle} | weTube
         link(rel="stylesheet" href="https://unpkg.com/mvp.css")
     body 
-        nav 
-            ul 
-                li
-                    a(href="/") Home
-                li
-                    a(href="/users/login") Login
-                li
-                    a(href="/users/logout") Logout
-                li
-                    a(href="/videos/123/edit") Edit Video
-                li
-                    a(href="/videos/123") Watch Video
         header 
             h1=pageTitle
+            nav 
+                ul 
+                    li
+                        a(href="/") Home
+                    li
+                        a(href="/videos/upload") Upload
         main
             block content
     include partials/footer
