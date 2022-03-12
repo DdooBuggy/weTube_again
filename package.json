@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "nooooo",
   "scripts": {
-    "dev": "nodemon -L --exec babel-node src/server.js"
+    "dev": "nodemon -L --exec babel-node src/init.js"
   },
   "repository": {
     "type": "git",
@@ -17,13 +17,14 @@
   "homepage": "https://github.com/DdooBuggy/weTube_again#readme",
   "dependencies": {
     "express": "^4.17.3",
+    "mongoose": "^6.2.5",
     "morgan": "^1.10.0",
     "pug": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
-    "@babel/preset-env": "^7.16.11",
     "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
     "nodemon": "^2.0.15"
   }
 }
