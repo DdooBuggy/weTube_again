@@ -3,8 +3,8 @@
 / -> Home trending videos
 /join -> Join
 /search -> Search videos
+/login -> login
 
-/users/login -> login
 /users/logout -> Logout
 /users/:id -> User Profile
 /users/edit -> Edit Profile

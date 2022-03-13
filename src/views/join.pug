@@ -1,0 +1,14 @@
+extends base
+
+block content 
+    if errorMessage
+        small=errorMessage
+    form(method="POST")
+        input(name="userId" type="text" placeholder="userId" required)
+        input(name="email" type="email" placeholder="email" required)
+        input(name="password" type="password" placeholder="password" required)
+        input(name="password2" type="password" placeholder="confirm password" required)
+        input(name="name" type="text" placeholder="name" required)
+        small this is optional
+        input(name="location" type="text" placeholder="location")
+        input(type="submit" value="Join")
