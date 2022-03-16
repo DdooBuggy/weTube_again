@@ -4,11 +4,16 @@ block content
     if errorMessage
         small=errorMessage
     form(method="POST")
+        span User Id
         input(name="userId" type="text" placeholder="userId" required)
+        span Email
         input(name="email" type="email" placeholder="email" required)
+        span Password
         input(name="password" type="password" placeholder="password" required)
+        span Password Confirmation
         input(name="password2" type="password" placeholder="confirm password" required)
+        span Name
         input(name="name" type="text" placeholder="name" required)
-        small this is optional
+        span Location - this is optional
         input(name="location" type="text" placeholder="location")
         input(type="submit" value="Join")

@@ -50,9 +50,9 @@ export const postJoin = async (req, res) => {
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
-  const pageTitle = "login";
+  const pageTitle = "Login";
   const { userId, password } = req.body;
-  const foundUser = await User.findOne({ userId });
+  const foundUser = await User.findOne({ userId, socialOnly: false });
   if (!foundUser) {
     return res.status(400).render("login", {
       pageTitle,
@@ -70,18 +70,6 @@ export const postLogin = async (req, res) => {
   req.session.user = foundUser;
   return res.redirect("/");
 };
-
-// logout
-export const logout = (req, res) => res.send("logout");
-
-// edit profile
-export const edit = (req, res) => res.send("Edit User");
-
-// delete user
-export const deleteUser = (req, res) => res.send("Delete User");
-
-// see user profile
-export const userProfile = (req, res) => res.send("User Profile");
 
 // GithubLogin
 export const startGithubLogin = (req, res) => {
@@ -136,13 +124,10 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    const existingUser = await User.findOne({ email: emailObj.email });
-    if (existingUser) {
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-      return res.redirect("/");
-    } else {
-      const user = await User.create({
+    let user = await User.findOne({ email: emailObj.email });
+    if (!user) {
+      user = await User.create({
+        avatarUrl: userData.avatar_url,
         name: userData.name ? userData.name : "Unknown",
         userId: userData.login,
         email: emailObj.email,
@@ -154,7 +139,63 @@ export const finishGithubLogin = async (req, res) => {
       req.session.user = user;
       return res.redirect("/");
     }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
   } else {
     return res.redirect("/login");
   }
 };
+
+// logout
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
+};
+
+// edit profile
+export const getEdit = (req, res) => {
+  return res.render("editProfile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { userId, email, name, location },
+  } = req;
+  let changedInfo = [];
+  if (userId !== req.session.user.userId) {
+    changedInfo.push({ userId });
+  }
+  if (email !== req.session.user.email) {
+    changedInfo.push({ email });
+  }
+  if (changedInfo.length > 0) {
+    const existingUser = await User.findOne({ $or: changedInfo });
+    if (existingUser && existingUser._id.toString() !== _id) {
+      return res.render("editProfile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "This username/email is already taken.",
+      });
+    }
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      userId,
+      email,
+      name,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updatedUser;
+  return res.redirect("/users/edit");
+};
+
+// see user profile
+export const userProfile = (req, res) => res.send("User Profile");
+
+// delete user
+export const deleteUser = (req, res) => res.send("Delete User");
