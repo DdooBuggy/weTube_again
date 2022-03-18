@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "nooooo",
   "scripts": {
-    "dev": "nodemon -L",
-    "assets": "webpack"
+    "dev:server": "nodemon -L",
+    "dev:assets": "webpack"
   },
   "repository": {
     "type": "git",
