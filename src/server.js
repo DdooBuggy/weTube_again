@@ -1,7 +1,9 @@
 import express from "express";
 import morgan from "morgan";
 import session from "express-session";
+import flash from "express-flash";
 import MongoStore from "connect-mongo";
+import apiRouter from "./routers/apiRouter";
 import rootRouter from "./routers/rootRouter";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
@@ -26,11 +28,13 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
+app.use(flash());
 app.use(localsMiddleware);
 
 // routers
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static("assets"));
+app.use("/api", apiRouter);
 app.use("/", rootRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);

@@ -11,24 +11,18 @@ export const postJoin = async (req, res) => {
   const { userId, email, password, password2, name, location } = req.body;
   const pageTitle = "Join";
   if (password !== password2) {
-    return res.status(400).render("join", {
-      pageTitle,
-      errorMessage: "Password confirmation does not match",
-    });
+    req.flash("error", "Password confirmation does not match");
+    return res.status(400).render("join", { pageTitle });
   }
   const existsUserId = await User.exists({ userId });
   if (existsUserId) {
-    return res.status(400).render("join", {
-      pageTitle,
-      errorMessage: "This userId is already taken",
-    });
+    req.flash("error", "This userId is already taken");
+    return res.status(400).render("join", { pageTitle });
   }
   const existsEmail = await User.exists({ email });
   if (existsEmail) {
-    return res.status(400).render("join", {
-      pageTitle,
-      errorMessage: "This email is already taken",
-    });
+    req.flash("error", "This email is already taken");
+    return res.status(400).render("join", { pageTitle });
   }
   try {
     await User.create({
@@ -38,12 +32,11 @@ export const postJoin = async (req, res) => {
       name,
       location,
     });
+    req.flash("success", "Welcome! and plz login.");
     return res.redirect("/login");
   } catch (error) {
-    return res.status(400).render("join", {
-      pageTitle,
-      errorMessage: error._message,
-    });
+    req.flash("error", error._message);
+    return res.status(400).render("join", { pageTitle });
   }
 };
 
@@ -55,17 +48,13 @@ export const postLogin = async (req, res) => {
   const { userId, password } = req.body;
   const foundUser = await User.findOne({ userId, socialOnly: false });
   if (!foundUser) {
-    return res.status(400).render("login", {
-      pageTitle,
-      errorMessage: "An account with this username does not exists",
-    });
+    req.flash("error", "An account with this username does not exists");
+    return res.status(400).render("login", { pageTitle });
   }
   const passwordConfirm = await bcrypt.compare(password, foundUser.password);
   if (!passwordConfirm) {
-    return res.status(400).render("login", {
-      pageTitle,
-      errorMessage: "Wrong password",
-    });
+    req.flash("error", "Wrong password");
+    return res.status(400).render("login", { pageTitle });
   }
   req.session.loggedIn = true;
   req.session.user = foundUser;
@@ -123,6 +112,7 @@ export const finishGithubLogin = async (req, res) => {
       (email) => email.primary === true && email.verified === true
     );
     if (!emailObj) {
+      req.flash("error", "We cannot use you're available email in Gitbub.");
       return res.redirect("/login");
     }
     let user = await User.findOne({ email: emailObj.email });
@@ -144,6 +134,7 @@ export const finishGithubLogin = async (req, res) => {
     req.session.user = user;
     return res.redirect("/");
   } else {
+    req.flash("error", "Failed to login with Github.");
     return res.redirect("/login");
   }
 };
@@ -151,6 +142,7 @@ export const finishGithubLogin = async (req, res) => {
 // logout
 export const logout = (req, res) => {
   req.session.destroy();
+  req.flash("info", "Bye Bye");
   return res.redirect("/");
 };
 
@@ -176,10 +168,8 @@ export const postEdit = async (req, res) => {
   if (changedInfo.length > 0) {
     const existingUser = await User.findOne({ $or: changedInfo });
     if (existingUser && existingUser._id.toString() !== _id) {
-      return res.render("editProfile", {
-        pageTitle: "Edit Profile",
-        errorMessage: "This username/email is already taken.",
-      });
+      req.flash("error", "This username/email is already taken.");
+      return res.render("editProfile", { pageTitle: "Edit Profile" });
     }
   }
   const updatedUser = await User.findByIdAndUpdate(
@@ -194,12 +184,14 @@ export const postEdit = async (req, res) => {
     { new: true }
   );
   req.session.user = updatedUser;
+  req.flash("success", "Profile updated.");
   return res.redirect("/users/edit");
 };
 
 // change password
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly) {
+    req.flash("error", "Can't change password.");
     return res.redirect("/");
   }
   return res.render("changePassword", { pageTitle: "Change Password" });
@@ -214,19 +206,20 @@ export const postChangePassword = async (req, res) => {
   const user = await User.findById(_id);
   const ok = await bcrypt.compare(currentPassword, user.password);
   if (!ok) {
-    return res.status(400).render("changePassword", {
-      pageTitle: "Change Password",
-      errorMessage: "The current password is incorrect",
-    });
+    req.flash("error", "The current password is incorrect");
+    return res
+      .status(400)
+      .render("changePassword", { pageTitle: "Change Password" });
   }
   if (newPassword !== newPassword2) {
+    req.flash("error", "The password does not match the confirmation");
     return res.status(400).render("changePassword", {
       pageTitle: "Change Password",
-      errorMessage: "The password does not match the confirmation",
     });
   }
   user.password = newPassword;
   await user.save();
+  req.flash("success", "Password updated.");
   return res.redirect("/users/logout");
 };
 

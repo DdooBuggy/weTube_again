@@ -22,6 +22,7 @@ export const searchVideo = async (req, res) => {
   }
   return res.render("search", { pageTitle: "Search", videos });
 };
+
 // watch video
 export const watch = async (req, res) => {
   const { id } = req.params;
@@ -41,6 +42,7 @@ export const getEditVideo = async (req, res) => {
     return res.status(404).render("404", { pageTitle: "Video not found" });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "You're not the owner of this video.");
     return res.status(403).redirect("/");
   }
   return res.render("edit", { pageTitle: video.title, video });
@@ -54,6 +56,7 @@ export const postEditVideo = async (req, res) => {
     return res.status(404).render("404", { pageTitle: "Video not found" });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "You're not the owner of this video.");
     return res.status(403).redirect("/");
   }
   await Video.findByIdAndUpdate(id, {
@@ -61,6 +64,7 @@ export const postEditVideo = async (req, res) => {
     description,
     hashtags: Video.formatHashtags(hashtags),
   });
+  req.flash("success", "Changes saved.");
   return res.redirect(`/videos/${id}`);
 };
 
@@ -74,11 +78,13 @@ export const deleteVideo = async (req, res) => {
     return res.status(404).render("404", { pageTitle: "Video not found" });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "You're not the owner of this video.");
     return res.status(403).redirect("/");
   }
   await Video.findByIdAndDelete(id);
   user.videos.splice(user.videos.indexOf(id), 1);
   user.save();
+  req.flash("info", "Video deleted.");
   return res.redirect("/");
 };
 
@@ -92,19 +98,21 @@ export const postUpload = async (req, res) => {
       user: { _id },
     },
     body: { title, description, hashtags },
-    file,
+    files: { video, thumbnail },
   } = req;
   try {
     const newVideo = await Video.create({
       title,
       description,
       owner: _id,
-      fileUrl: file.path,
+      fileUrl: video[0].path,
+      thumbnailUrl: thumbnail[0].path,
       hashtags: Video.formatHashtags(hashtags),
     });
     const user = await User.findById(_id);
     user.videos.push(newVideo._id);
     await user.save();
+    req.flash("success", "Video uploaded.");
     return res.redirect("/");
   } catch (error) {
     return res.status(400).render("upload", {
@@ -112,4 +120,16 @@ export const postUpload = async (req, res) => {
       errorMessage: error._message,
     });
   }
+};
+
+// register view
+export const registerView = async (req, res) => {
+  const { id } = req.params;
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+  video.meta.views += 1;
+  await video.save();
+  return res.sendStatus(200);
 };
