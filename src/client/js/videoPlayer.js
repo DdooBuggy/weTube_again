@@ -22,13 +22,14 @@ const handlePlayClick = (event) => {
   playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 const handleKeydown = (event) => {
-  if (event.code === "Space") {
+  if (event.target.id !== "textarea" && event.code === "Space") {
     handlePlayClick();
   }
 };
 playBtn.addEventListener("click", handlePlayClick);
 video.addEventListener("click", handlePlayClick);
 document.addEventListener("keydown", handleKeydown);
+
 // mute video
 let volumeValue = 0.5;
 video.volume = volumeValue;
