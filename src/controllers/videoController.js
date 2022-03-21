@@ -1,5 +1,6 @@
 import Video from "../models/Video";
 import User from "../models/User";
+import Comment from "../models/Comment";
 
 // home
 export const home = async (req, res) => {
@@ -26,7 +27,15 @@ export const searchVideo = async (req, res) => {
 // watch video
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id).populate("owner");
+  const video = await Video.findById(id)
+    .populate("owner")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "owner",
+        model: "User",
+      },
+    });
   if (!video) {
     return res.status(404).render("404", { pageTitle: "Video not found" });
   }
@@ -115,10 +124,7 @@ export const postUpload = async (req, res) => {
     req.flash("success", "Video uploaded.");
     return res.redirect("/");
   } catch (error) {
-    return res.status(400).render("upload", {
-      pageTitle: "Upload",
-      errorMessage: error._message,
-    });
+    return res.status(400).render("404", { pageTitle: error._message });
   }
 };
 
@@ -135,10 +141,44 @@ export const registerView = async (req, res) => {
 };
 
 // comment
-export const createComment = (req, res) => {
+export const createComment = async (req, res) => {
   const {
     params: { id },
     body: { text },
+    session: { user },
   } = req;
-  return res.end();
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+  const comment = await Comment.create({
+    text,
+    owner: user._id,
+    video: id,
+  });
+  video.comments.push(comment._id);
+  await video.save();
+  return res.status(201).json({ newCommentId: comment._id });
+};
+
+// delete comment
+export const deletComment = async (req, res) => {
+  const { id } = req.params;
+  const { _id } = req.session.user;
+  const comment = await Comment.findById(id).populate("video");
+  const video = await Video.findById(comment.video._id);
+  // const user = await User.findById(_id);
+  if (!comment) {
+    return res.status(404).render("404", { pageTitle: "Comment not found" });
+  }
+  if (String(comment.owner) !== String(_id)) {
+    req.flash("error", "You're not the owner of this comment.");
+    return res.status(403).redirect("/");
+  }
+  await Comment.findByIdAndDelete(id);
+  video.comments.splice(video.comments.indexOf(id), 1);
+  video.save();
+  // user.comments.splice(user.comments.indexOf(id), 1);
+  // user.save();
+  return res.sendStatus(200);
 };
