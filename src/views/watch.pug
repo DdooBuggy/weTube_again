@@ -19,29 +19,39 @@ block content
             div 
                 span#fullScreen
                     i.fas.fa-expand
-    div 
-        p=video.title
-        small=video.createdAt
-    div 
-        small Uploaded by 
-            a(href=`/users/${video.owner._id}`)=video.owner.name
-    if String(video.owner._id) === String(loggedInUser._id)
-        a(href=`${video.id}/edit`) Edit Video &rarr;
-        br
-        a(href=`${video.id}/delete`) Delete Video &rarr;
+    div.video__data
+        div.video__info
+            h3.video__title=video.title
+            div.video__info-sub
+                span 조회수 #{video.meta.views} 회 • 
+                span=video.createdAt 
+        div.video__editDelete
+            if String(video.owner._id) === String(loggedInUser._id)
+                a(href=`${video.id}/edit`) Edit Video
+                a(href=`${video.id}/delete`) Delete Video
+    div.video__summary
+        div.video__uploader
+            a(href=`/users/${video.owner._id}`).video__uploader-avatar
+                img(src="/" + video.owner.avatarUrl)
+            a(href=`/users/${video.owner._id}`).video__uploader-name
+                span=video.owner.name
+        p #{video.description}
     if loggedIn
         div.video__add-comments
             form.video__comment-form#commentForm
-                textarea(cols="30" rows="10", placeholder="Write a nice comment...")#textarea
-                button Add Comment
+                textarea(cols="30" rows="1" placeholder="Write a nice comment..." maxlength=50)#textarea
+                input(type="submit" value="Comment")
     div.video__comments
         ul 
             each comment in video.comments.reverse()
                 li.video__comment(data-id=comment._id)
-                    i.fas.fa-comment
-                    span   #{comment.text}
+                    div.video__comment-ownerAndText
+                        a(href=`/users/${comment.owner._id}`)
+                            img(src="/" + comment.owner.avatarUrl)
+                        span   #{comment.text}
                     if String(comment.owner._id) === String(loggedInUser._id)
-                        span.video__comment-deleteBtn ❌
+                        span.video__comment-deleteBtn
+                            i.fas.fa-trash
 block scripts 
     script(src="/static/js/videoPlayer.js")
     if loggedIn

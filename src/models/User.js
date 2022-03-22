@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
-  userId: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
+  userId: { type: String, required: true, unique: true, min: 2, max: 10 },
+  email: { type: String, required: true, unique: true, min: 2, max: 50 },
   password: { type: String },
-  name: { type: String, required: true },
+  name: { type: String, required: true, min: 2, max: 10 },
   socialOnly: { type: Boolean, default: false },
   avatarUrl: String,
-  location: String,
+  location: { type: String, max: 50 },
   videos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Video" }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });

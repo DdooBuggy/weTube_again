@@ -1,10 +1,17 @@
 import mongoose from "mongoose";
 
+const currenTime = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const date = today.getDate();
+  return `${year}.${month}.${date}`;
+};
 const videoSchema = new mongoose.Schema({
-  title: { type: String, required: true, trim: true, min: 2 },
-  description: { type: String, required: true, trim: true, min: 2 },
-  createdAt: { type: Date, required: true, default: Date.now },
-  hashtags: [{ type: String, trim: true }],
+  title: { type: String, required: true, trim: true, min: 2, max: 20 },
+  description: { type: String, required: true, trim: true, min: 2, max: 100 },
+  createdAt: { type: String, required: true, default: currenTime() },
+  hashtags: [{ type: String, trim: true, max: 20 }],
   fileUrl: { type: String, required: true },
   thumbnailUrl: { type: String, required: true },
   meta: {

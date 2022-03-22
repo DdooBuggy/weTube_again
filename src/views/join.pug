@@ -4,13 +4,13 @@ block content
     if errorMessage
         small=errorMessage
     form(method="POST")
-        input(name="userId" type="text" placeholder="userId" required)
-        input(name="email" type="email" placeholder="email" required)
-        input(name="password" type="password" placeholder="password" required)
-        input(name="password2" type="password" placeholder="confirm password" required)
-        input(name="name" type="text" placeholder="name" required)
+        input(name="userId" type="text" placeholder="userId" required minlength=2 maxlength=10)
+        input(name="email" type="email" placeholder="email" required minlength=2 maxlength=50)
+        input(name="password" type="password" placeholder="password" required minlength=2 maxlength=20)
+        input(name="password2" type="password" placeholder="confirm password" required minlength=2 maxlength=20)
+        input(name="name" type="text" placeholder="name" required minlength=2 maxlength=10)
         small This is optional
-        input(name="location" type="text" placeholder="location")
+        input(name="location" type="text" placeholder="location" maxlength=50)
         input(type="submit" value="Join")
         include partials/social-login
     div.auth-switch
