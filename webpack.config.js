@@ -10,8 +10,6 @@ module.exports = {
     recorder: PATH_CLIENT_JS + "recorder.js",
     commentSection: PATH_CLIENT_JS + "commentSection.js",
   },
-  mode: "development",
-  watch: true,
   watchOptions: {
     poll: 1000, // Check for changes every second
   },
