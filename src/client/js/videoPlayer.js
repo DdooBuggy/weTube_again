@@ -79,7 +79,10 @@ const handleTimelineChange = (event) => {
   } = event;
   video.currentTime = value;
 };
-video.addEventListener("loadedmetadata", handleLoadedMetadata);
+video.addEventListener("canplay", handleLoadedMetadata);
+if (!isNaN(video.duration)) {
+  handleLoadedMetadata();
+}
 video.addEventListener("timeupdate", handleTimeUpdate);
 timeline.addEventListener("input", handleTimelineChange);
 
