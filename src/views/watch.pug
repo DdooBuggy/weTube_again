@@ -2,7 +2,7 @@ extends base
 
 block content
     div#videoContainer(data-id=video._id)
-        video(src="/"+video.fileUrl)
+        video(src=video.fileUrl)
         div#videoControls.videoControls
             div.videoControls__play
                 span#play.videoControls__playBtn
@@ -47,7 +47,10 @@ block content
                 li.video__comment(data-id=comment._id)
                     div.video__comment-ownerAndText
                         a(href=`/users/${comment.owner._id}`)
-                            img(src="/" + comment.owner.avatarUrl)
+                        if comment.owner.avatarUrl === "" || !comment.owner.avatarUrl
+                            span 😀
+                        else
+                            img(src=comment.owner.avatarUrl)
                         span   #{comment.text}
                     if String(comment.owner._id) === String(loggedInUser._id)
                         span.video__comment-deleteBtn
