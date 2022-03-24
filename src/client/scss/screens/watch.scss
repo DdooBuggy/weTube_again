@@ -55,12 +55,17 @@
       margin: 0 5px;
       display: flex;
       align-items: center;
+      a {
+        height: 25px;
+        display: flex;
+        align-items: center;
+      }
       img {
         width: 25px;
         height: 25px;
         border-radius: 50%;
       }
-      span {
+      > span {
         margin-left: 10px;
         word-break: break-all;
       }

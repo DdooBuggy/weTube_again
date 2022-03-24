@@ -32,7 +32,7 @@ block content
     div.video__summary
         div.video__uploader
             a(href=`/users/${video.owner._id}`).video__uploader-avatar
-                img(src="/" + video.owner.avatarUrl)
+                img(src=video.owner.avatarUrl)
             a(href=`/users/${video.owner._id}`).video__uploader-name
                 span=video.owner.name
         p #{video.description}
@@ -47,10 +47,10 @@ block content
                 li.video__comment(data-id=comment._id)
                     div.video__comment-ownerAndText
                         a(href=`/users/${comment.owner._id}`)
-                        if comment.owner.avatarUrl === "" || !comment.owner.avatarUrl
-                            span 😀
-                        else
-                            img(src=comment.owner.avatarUrl)
+                            if comment.owner.avatarUrl === "" || !comment.owner.avatarUrl
+                                span 😀
+                            else
+                                img(src=comment.owner.avatarUrl)
                         span   #{comment.text}
                     if String(comment.owner._id) === String(loggedInUser._id)
                         span.video__comment-deleteBtn
