@@ -171,10 +171,11 @@ export const postEdit = async (req, res) => {
       return res.render("editProfile", { pageTitle: "Edit Profile" });
     }
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {
-      avatarUrl: file ? file.location : avatarUrl,
+      avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
       userId,
       email,
       name,
@@ -183,6 +184,21 @@ export const postEdit = async (req, res) => {
     { new: true }
   );
   req.session.user = updatedUser;
+  // delete s3 files
+  if (req.file) {
+    s3.deleteObject(
+      {
+        Bucket: "buggy-wetube-practice/images",
+        Key: avatarUrl.split("/")[-1],
+      },
+      (err, data) => {
+        if (err) {
+          throw err;
+        }
+        console.log("s3 deleteObject", data);
+      }
+    );
+  }
   req.flash("success", "Profile updated.");
   return res.redirect("/users/edit");
 };

@@ -90,6 +90,31 @@ export const deleteVideo = async (req, res) => {
     req.flash("error", "You're not the owner of this video.");
     return res.status(403).redirect("/");
   }
+  // delete s3 files
+  s3.deleteObject(
+    {
+      Bucket: "buggy-wetube-practice/videos",
+      Key: video.fileUrl.split("/")[-1],
+    },
+    (err, data) => {
+      if (err) {
+        throw err;
+      }
+      console.log("s3 deleteObject", data);
+    }
+  );
+  s3.deleteObject(
+    {
+      Bucket: "buggy-wetube-practice/videos",
+      Key: video.thumbnailUrl.split("/")[-1],
+    },
+    (err, data) => {
+      if (err) {
+        throw err;
+      }
+      console.log("s3 deleteObject", data);
+    }
+  );
   await Video.findByIdAndDelete(id);
   user.videos.splice(user.videos.indexOf(id), 1);
   user.save();
@@ -109,13 +134,14 @@ export const postUpload = async (req, res) => {
     body: { title, description, hashtags },
     files: { video, thumbnail },
   } = req;
+  const isHeroku = process.env.NODE_ENV === "production";
   try {
     const newVideo = await Video.create({
       title,
       description,
       owner: _id,
-      fileUrl: video[0].location,
-      thumbnailUrl: thumbnail[0].location,
+      fileUrl: isHeroku ? video[0].location : video[0].path,
+      thumbnailUrl: isHeroku ? thumbnail[0].location : thumbnail[0].path,
       hashtags: Video.formatHashtags(hashtags),
     });
     const user = await User.findById(_id);

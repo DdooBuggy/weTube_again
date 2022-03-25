@@ -10,6 +10,7 @@ const handleSubmit = async (event) => {
   const text = textarea.value;
   const videoId = videoContainer.dataset.id;
   if (text.trim() === "") {
+    textarea.value = "";
     return;
   }
 
