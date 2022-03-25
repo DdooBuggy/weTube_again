@@ -107,8 +107,8 @@ export const deleteVideo = async (req, res) => {
   if (isHeroku) {
     s3.deleteObject(
       {
-        Bucket: "buggy-wetube-practice/videos",
-        Key: video.fileUrl.split("/")[-1],
+        Bucket: "buggy-wetube-practice",
+        Key: `videos/${video.fileUrl.split("/")[-1]}`,
       },
       (err, data) => {
         if (err) {
@@ -119,8 +119,8 @@ export const deleteVideo = async (req, res) => {
     );
     s3.deleteObject(
       {
-        Bucket: "buggy-wetube-practice/videos",
-        Key: video.thumbnailUrl.split("/")[-1],
+        Bucket: "buggy-wetube-practice",
+        Key: `videos/${video.thumbnailUrl.split("/")[-1]}`,
       },
       (err, data) => {
         if (err) {

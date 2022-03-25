@@ -200,8 +200,8 @@ export const postEdit = async (req, res) => {
   if (req.file && avatarUrl && isHeroku) {
     s3.deleteObject(
       {
-        Bucket: "buggy-wetube-practice/images",
-        Key: avatarUrl.split("/")[-1],
+        Bucket: "buggy-wetube-practice",
+        Key: `images/${avatarUrl.split("/")[-1]}`,
       },
       (err, data) => {
         if (err) {
