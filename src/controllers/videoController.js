@@ -104,11 +104,12 @@ export const deleteVideo = async (req, res) => {
   }
   // delete s3 files
   const isHeroku = process.env.NODE_ENV === "production";
+  const fileId = video.fileUrl.split("/")[video.fileUrl.split("/").length - 1];
   if (isHeroku) {
     s3.deleteObject(
       {
         Bucket: "buggy-wetube-practice",
-        Key: `videos/${video.fileUrl.split("/")[-1]}`,
+        Key: `videos/${fileId}`,
       },
       (err, data) => {
         if (err) {
@@ -120,7 +121,7 @@ export const deleteVideo = async (req, res) => {
     s3.deleteObject(
       {
         Bucket: "buggy-wetube-practice",
-        Key: `videos/${video.thumbnailUrl.split("/")[-1]}`,
+        Key: `videos/${fileId}`,
       },
       (err, data) => {
         if (err) {

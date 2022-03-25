@@ -35,7 +35,9 @@ block content
     div.video__summary
         div.video__uploader
             a(href=`/users/${video.owner._id}`).video__uploader-avatar
-                if isHeroku
+                if video.owner.avatarUrl === "" || !video.owner.avatarUrl
+                    span 😀
+                else if isHeroku
                     img(src=video.owner.avatarUrl)
                 else 
                     img(src="/" + video.owner.avatarUrl)

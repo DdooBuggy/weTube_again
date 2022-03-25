@@ -197,11 +197,12 @@ export const postEdit = async (req, res) => {
   );
   req.session.user = updatedUser;
   // delete s3 files
+  const fileId = avatarUrl.split("/")[avatarUrl.split("/").length - 1];
   if (req.file && avatarUrl && isHeroku) {
     s3.deleteObject(
       {
         Bucket: "buggy-wetube-practice",
-        Key: `images/${avatarUrl.split("/")[-1]}`,
+        Key: `images/${fileId}`,
       },
       (err, data) => {
         if (err) {
