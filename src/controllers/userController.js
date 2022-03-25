@@ -1,8 +1,16 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
+import aws from "aws-sdk";
+const s3 = new aws.S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+});
 
-// join
+//-----------------------------------------------------------------//
+//          join
 export const getJoin = (req, res) => {
   return res.render("join", { pageTitle: "Join" });
 };
@@ -39,7 +47,8 @@ export const postJoin = async (req, res) => {
   }
 };
 
-// login
+//-----------------------------------------------------------------//
+//          login
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
@@ -60,7 +69,8 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
-// GithubLogin
+//-----------------------------------------------------------------//
+//          githubLogin
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
   console.log(process.env.GH_CLIENT_ID);
@@ -138,14 +148,16 @@ export const finishGithubLogin = async (req, res) => {
   }
 };
 
-// logout
+//-----------------------------------------------------------------//
+//          logout
 export const logout = (req, res) => {
   req.flash("info", "Bye Bye");
   req.session.destroy();
   return res.redirect("/");
 };
 
-// edit profile
+//-----------------------------------------------------------------//
+//          edit profile
 export const getEdit = (req, res) => {
   return res.render("editProfile", { pageTitle: "Edit Profile" });
 };
@@ -185,7 +197,7 @@ export const postEdit = async (req, res) => {
   );
   req.session.user = updatedUser;
   // delete s3 files
-  if (req.file) {
+  if (req.file && avatarUrl && isHeroku) {
     s3.deleteObject(
       {
         Bucket: "buggy-wetube-practice/images",
@@ -203,7 +215,8 @@ export const postEdit = async (req, res) => {
   return res.redirect("/users/edit");
 };
 
-// change password
+//-----------------------------------------------------------------//
+//          change password
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly) {
     req.flash("error", "Can't change password.");
@@ -238,7 +251,8 @@ export const postChangePassword = async (req, res) => {
   return res.redirect("/users/logout");
 };
 
-// see user profile
+//-----------------------------------------------------------------//
+//          see user profile
 export const userProfile = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).populate({
@@ -254,5 +268,6 @@ export const userProfile = async (req, res) => {
   return res.render("profile", { pageTitle: user.name, user });
 };
 
-// delete user
+//-----------------------------------------------------------------//
+//          delete user
 export const deleteUser = (req, res) => res.send("Delete User");

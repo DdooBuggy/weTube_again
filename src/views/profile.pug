@@ -5,8 +5,10 @@ block content
     div.profile__data
         if user.avatarUrl === "" || !user.avatarUrl
             span.avatar 😀
-        else
+        else if isHeroku
             img(src=user.avatarUrl).avatar
+        else 
+            img(src="/" + user.avatarUrl).avatar
         h3=user.name
     div.video-grid
         each video in user.videos

@@ -1,8 +1,16 @@
 import Video from "../models/Video";
 import User from "../models/User";
 import Comment from "../models/Comment";
+import aws from "aws-sdk";
+const s3 = new aws.S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+});
 
-// home
+//-----------------------------------------------------------------//
+//          home
 export const home = async (req, res) => {
   const videos = await Video.find({})
     .sort({ createdAt: "desc" })
@@ -10,7 +18,8 @@ export const home = async (req, res) => {
   return res.render("home", { pageTitle: "Home", videos });
 };
 
-// search video
+//-----------------------------------------------------------------//
+//          search video
 export const searchVideo = async (req, res) => {
   let videos = [];
   const { keyword } = req.query;
@@ -24,7 +33,8 @@ export const searchVideo = async (req, res) => {
   return res.render("search", { pageTitle: "Search", videos });
 };
 
-// watch video
+//-----------------------------------------------------------------//
+//          watch video
 export const watch = async (req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id)
@@ -42,7 +52,8 @@ export const watch = async (req, res) => {
   return res.render("watch", { pageTitle: video.title, video });
 };
 
-// edit video
+//-----------------------------------------------------------------//
+//          edit video
 export const getEditVideo = async (req, res) => {
   const { id } = req.params;
   const { _id } = req.session.user;
@@ -77,7 +88,8 @@ export const postEditVideo = async (req, res) => {
   return res.redirect(`/videos/${id}`);
 };
 
-// delete video
+//-----------------------------------------------------------------//
+//          delete video
 export const deleteVideo = async (req, res) => {
   const { id } = req.params;
   const { _id } = req.session.user;
@@ -91,30 +103,33 @@ export const deleteVideo = async (req, res) => {
     return res.status(403).redirect("/");
   }
   // delete s3 files
-  s3.deleteObject(
-    {
-      Bucket: "buggy-wetube-practice/videos",
-      Key: video.fileUrl.split("/")[-1],
-    },
-    (err, data) => {
-      if (err) {
-        throw err;
+  const isHeroku = process.env.NODE_ENV === "production";
+  if (isHeroku) {
+    s3.deleteObject(
+      {
+        Bucket: "buggy-wetube-practice/videos",
+        Key: video.fileUrl.split("/")[-1],
+      },
+      (err, data) => {
+        if (err) {
+          throw err;
+        }
+        console.log("s3 deleteObject", data);
       }
-      console.log("s3 deleteObject", data);
-    }
-  );
-  s3.deleteObject(
-    {
-      Bucket: "buggy-wetube-practice/videos",
-      Key: video.thumbnailUrl.split("/")[-1],
-    },
-    (err, data) => {
-      if (err) {
-        throw err;
+    );
+    s3.deleteObject(
+      {
+        Bucket: "buggy-wetube-practice/videos",
+        Key: video.thumbnailUrl.split("/")[-1],
+      },
+      (err, data) => {
+        if (err) {
+          throw err;
+        }
+        console.log("s3 deleteObject", data);
       }
-      console.log("s3 deleteObject", data);
-    }
-  );
+    );
+  }
   await Video.findByIdAndDelete(id);
   user.videos.splice(user.videos.indexOf(id), 1);
   user.save();
@@ -122,7 +137,8 @@ export const deleteVideo = async (req, res) => {
   return res.redirect("/");
 };
 
-// upload video
+//-----------------------------------------------------------------//
+//          upload video
 export const getUpload = (req, res) => {
   return res.render("upload", { pageTitle: "Upload" });
 };
@@ -154,7 +170,8 @@ export const postUpload = async (req, res) => {
   }
 };
 
-// register view
+//-----------------------------------------------------------------//
+//          register view
 export const registerView = async (req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id);
@@ -166,7 +183,8 @@ export const registerView = async (req, res) => {
   return res.sendStatus(200);
 };
 
-// comment
+//-----------------------------------------------------------------//
+//          comment
 export const createComment = async (req, res) => {
   const {
     params: { id },
@@ -187,7 +205,8 @@ export const createComment = async (req, res) => {
   return res.status(201).json({ newCommentId: comment._id });
 };
 
-// delete comment
+//-----------------------------------------------------------------//
+//          delete comment
 export const deletComment = async (req, res) => {
   const { id } = req.params;
   const { _id } = req.session.user;
