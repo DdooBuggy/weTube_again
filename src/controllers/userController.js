@@ -73,7 +73,6 @@ export const postLogin = async (req, res) => {
 //          githubLogin
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
-  console.log(process.env.GH_CLIENT_ID);
   const config = {
     client_id: process.env.GH_CLIENT_ID,
     allow_signup: false,
