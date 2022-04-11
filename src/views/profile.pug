@@ -5,7 +5,7 @@ block content
     div.profile__data
         if user.avatarUrl === "" || !user.avatarUrl
             span.avatar 😀
-        else if isHeroku
+        else if isHeroku || user.avatarUrl.includes("github")
             img(src=user.avatarUrl).avatar
         else 
             img(src="/" + user.avatarUrl).avatar
