@@ -7,7 +7,7 @@
     "build": "npm run build:server && npm run build:assets",
     "build:server": "babel src -d build --ignore src/client",
     "build:assets": "webpack --mode=production",
-    "dev:server": "nodemon -L",
+    "dev:server": "nodemon",
     "dev:assets": "webpack --mode=development -w"
   },
   "repository": {
