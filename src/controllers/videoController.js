@@ -102,6 +102,12 @@ export const deleteVideo = async (req, res) => {
     req.flash("error", "You're not the owner of this video.");
     return res.status(403).redirect("/");
   }
+  const comments = video.comments;
+  if (comments.length !== 0) {
+    comments.forEach(async (comment) => {
+      await Comment.findByIdAndDelete(comment);
+    });
+  }
   // delete s3 files
   const isHeroku = process.env.NODE_ENV === "production";
   if (isHeroku) {
