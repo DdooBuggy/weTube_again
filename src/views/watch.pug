@@ -27,7 +27,10 @@ block content
             h3.video__title=video.title
             div.video__info-sub
                 span 조회수 #{video.meta.views} 회 • 
-                span=video.createdAt 
+                span=video.createdAt
+                ul.video__info-hashtags
+                    each hashtag in video.hashtags
+                        li=hashtag
         div.video__editDelete
             if String(video.owner._id) === String(loggedInUser._id)
                 a(href=`${video.id}/edit`) Edit Video

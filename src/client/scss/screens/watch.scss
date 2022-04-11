@@ -90,6 +90,13 @@
       font-size: 13px;
       font-weight: 100;
     }
+    .video__info-hashtags {
+      display: flex;
+      margin-top: 5px;
+      li {
+        margin-right: 5px;
+      }
+    }
   }
   .video__editDelete {
     display: flex;
