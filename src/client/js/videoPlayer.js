@@ -68,6 +68,16 @@ const formatTime = (seconds) => {
 const handleLoadedMetadata = () => {
   totalTime.innerText = formatTime(Math.floor(video.duration));
   timeline.max = Math.floor(video.duration);
+  const promise = video.play();
+  if (promise !== undefined) {
+    promise
+      .then((_) => {
+        video.play();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 };
 const handleTimeUpdate = () => {
   currenTime.innerText = formatTime(Math.floor(video.currentTime));

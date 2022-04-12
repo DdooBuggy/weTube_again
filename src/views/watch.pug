@@ -7,34 +7,35 @@ block content
         else
             video(src="/" + video.fileUrl)
         div#videoControls.videoControls
-            div.videoControls__play
-                span#play.videoControls__playBtn
-                    i.fas.fa-play 
-                div.videoControls__time
-                    span#currenTime 00:00
-                    span  / 
-                    span#totalTime 00:00
-            input(type="range" step=1 value=0 min=0)#timeline.videoControls__timeline
-            div.videoControls__volume
-                input(type="range" step=0.1 value=0.5 min=0 max=1)#volume
-                span#mute 
-                    i.fas.fa-volume-up
-            div 
-                span#fullScreen
-                    i.fas.fa-expand
+            input(type="range" step=1 value=0 min=0)#timeline.videoControls__timeline.cursor__pointer
+            div.videoControls__Btns
+                div.videoControls__Btns--box
+                    div.videoControls__play.cursor__pointer
+                        span#play.videoControls__playBtn
+                            i.fas.fa-play 
+                    div.videoControls__volume.cursor__pointer
+                        span#mute 
+                            i.fas.fa-volume-up
+                        input(type="range" step=0.1 value=0.5 min=0 max=1)#volume.cursor__pointer
+                    div.videoControls__time
+                        span#currenTime 00:00
+                        span  / 
+                        span#totalTime 00:00
+                div.videoControls__Btns--fullScreen.cursor__pointer
+                    span#fullScreen
+                        i.fas.fa-expand
     div.video__data
         div.video__info
+            ul.video__info-hashtags
+                each hashtag in video.hashtags
+                    li=hashtag
             h3.video__title=video.title
             div.video__info-sub
                 span 조회수 #{video.meta.views} 회 • 
                 span=video.createdAt
-                ul.video__info-hashtags
-                    each hashtag in video.hashtags
-                        li=hashtag
-        div.video__editDelete
+        div.video__edit
             if String(video.owner._id) === String(loggedInUser._id)
-                a(href=`${video.id}/edit`) Edit Video
-                a(href=`${video.id}/delete`) Delete Video
+                a(href=`${video.id}/edit`) Edit Video &rarr;
     div.video__summary
         div.video__uploader
             a(href=`/users/${video.owner._id}`).video__uploader-avatar
@@ -46,11 +47,11 @@ block content
                     img(src="/" + video.owner.avatarUrl)
             a(href=`/users/${video.owner._id}`).video__uploader-name
                 span=video.owner.name
-        p #{video.description}
+        p.video__summary--description #{video.description}
     if loggedIn
         div.video__add-comments
             form.video__comment-form#commentForm
-                textarea(cols="30" rows="1" placeholder="Write a nice comment..." maxlength=50)#textarea
+                textarea(cols="30" rows="1" placeholder="Write a nice comment..." maxlength=200)#textarea
                 input(type="submit" value="Comment")
     div.video__comments
         ul 

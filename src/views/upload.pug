@@ -5,8 +5,6 @@ block content
         //- div.upload__video
         //-     video#preview
         //-     button#actionBtn.social__btn Start Recording
-        if errorMessage
-            div=errorMessage
         form(method="POST" enctype="multipart/form-data")
             label(for="video") Video File (max file size: #{videoSize}MB)
             input(name="video" type="file" required id="video" accept="video/*")

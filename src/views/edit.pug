@@ -1,9 +1,10 @@
 extends base
 
 block content
-    h4 Update video
-    form(method="POST")
+    form(method="POST").edit__form
         input(name="title" type="text" placeholder="video title" value=video.title required minlegth=2)
         input(name="description" type="text" placeholder="Description" value=video.description required)
         input(name="hashtags" type="text" placeholder="Hashtags, seperated by comma" value=video.hashtags.join() required)
-        button Save
+        input(type="submit" value="Update")
+    div.edit__form--delete
+        a(href="delete") Delete Video

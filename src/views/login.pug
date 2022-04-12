@@ -1,8 +1,6 @@
 extends base
 
 block content 
-    if errorMessage
-        small=errorMessage
     form(method="POST")
         input(name="userId" type="text" placeholder="userId" required)
         input(name="password" type="password" placeholder="password" required)
