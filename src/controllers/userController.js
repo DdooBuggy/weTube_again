@@ -248,7 +248,8 @@ export const postChangePassword = async (req, res) => {
   user.password = newPassword;
   await user.save();
   req.flash("success", "Password updated.");
-  return res.redirect("/users/logout");
+  req.session.destroy();
+  return res.redirect("/login");
 };
 
 //-----------------------------------------------------------------//
