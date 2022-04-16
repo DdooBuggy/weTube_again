@@ -2,8 +2,11 @@ extends base
 
 block content
     form(method="POST").edit__form
+        label(for="title") Title
         input(name="title" type="text" placeholder="video title" value=video.title required minlegth=2)
+        label(for="description") Description
         input(name="description" type="text" placeholder="Description" value=video.description required)
+        label(for="hashtags") Hashtags
         input(name="hashtags" type="text" placeholder="Hashtags, seperated by comma" value=video.hashtags.join() required)
         input(type="submit" value="Update")
     div.edit__form--delete

@@ -1,4 +1,8 @@
 header {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  box-sizing: border-box;
   background-color: $headerColor;
   padding: 20px 50px;
   display: flex;
@@ -7,6 +11,7 @@ header {
   .header__logo {
     color: $red;
     font-size: 38px;
+    margin-right: 20px;
   }
   ul {
     display: flex;
@@ -21,12 +26,6 @@ header {
     i {
       font-size: 16px;
     }
-  }
-  .header__btn {
-    background-color: white;
-    color: $bg;
-    padding: 5px 10px;
-    border-radius: 5px;
   }
   .header__avatar {
     width: 40px;

@@ -5,14 +5,14 @@ block content
         //- div.upload__video
         //-     video#preview
         //-     button#actionBtn.social__btn Start Recording
-        form(method="POST" enctype="multipart/form-data")
+        form(method="POST" enctype="multipart/form-data").upload__form
             label(for="video") Video File (max file size: #{videoSize}MB)
             input(name="video" type="file" required id="video" accept="video/*")
             label(for="thumbnail") Thumbnail File (max file size #{videoSize}MB)
             input(name="thumbnail" type="file" required id="thumbnail" accept="image/*")
-            input(name="title" type="text" placeholder="Title" required minlegth=2 maxlength=20)
-            input(name="description" type="text" placeholder="Description" required minlegth=2 maxlength=100)
-            input(name="hashtags" type="text" placeholder="Hashtags, seperated by comma" required maxlength=20)
+            input(name="title" type="text" placeholder="Title" required minlegth=2 maxlength=100)
+            input(name="description" type="text" placeholder="Description" required minlegth=2)
+            input(name="hashtags" type="text" placeholder="Hashtags, seperated by comma" required maxlength=100)
             input(type="submit" value="Upload video")
 block scripts 
     //- script(src="/static/js/recorder.js") 

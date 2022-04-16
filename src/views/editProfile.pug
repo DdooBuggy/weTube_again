@@ -4,15 +4,15 @@ block content
     form(method="POST" enctype="multipart/form-data").edit-profile__form
         label(for="avatar") Avatar (max file size #{imgSize}MB)
         input(type="file" id="avatar" name="avatar" accept="image/*")
-        span User Id
-        input(name="userId" type="text" placeholder="userId" required value=loggedInUser.userId)
-        span Email
-        input(name="email" type="email" placeholder="email" required value=loggedInUser.email)
-        span Name
-        input(name="name" type="text" placeholder="name" required value=loggedInUser.name)
-        span Locagion
-        input(name="location" type="text" placeholder="Location" value=loggedInUser.location)
-        input(type="submit" value="Update")
+        label(for="userId") User Id
+        input(name="userId" id="userId" type="text" placeholder="userId" required value=loggedInUser.userId)
+        label(for="email") Email
+        input(name="email" id="email" type="email" placeholder="email" required value=loggedInUser.email)
+        label(for="name") Name
+        input(name="name" id="name" type="text" placeholder="name" required value=loggedInUser.name)
+        label(for="location") Locagion
+        input(name="location" id="location" type="text" placeholder="Location" value=loggedInUser.location)
+        input(type="submit" id="editProfileBtn" value="Update")
         if !loggedInUser.socialOnly
             div.edit-profile__password
                 a(href="changePassword") Change Password &rarr;

@@ -22,6 +22,7 @@ const handlePlayClick = (event) => {
   playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 const handleKeydown = (event) => {
+  event.preventDefault(); // preventing space scroll
   if (event.target.id !== "textarea" && event.code === "Space") {
     handlePlayClick();
   }

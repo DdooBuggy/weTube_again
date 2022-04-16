@@ -28,7 +28,7 @@
       padding: 5px;
       font-size: 15px;
       margin-top: 10px;
-      border-radius: 50px;
+      border-radius: 5px;
       outline: none;
       &:hover {
         cursor: pointer;
@@ -77,9 +77,27 @@
         word-break: break-all;
       }
     }
-    .video__comment-deleteBtn:hover {
-      cursor: pointer;
+    .video__comment-deleteBtn {
+      color: $fontColor;
+      &:hover {
+        cursor: pointer;
+      }
     }
+  }
+}
+@media (max-width: 1200px) {
+  .watch_container {
+    padding: 0;
+  }
+}
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .watch_container {
+    padding: 0 100px;
+  }
+}
+@media (min-width: 2000px) {
+  .watch_container {
+    padding: 0 200px;
   }
 }
 .video__data {
@@ -132,6 +150,7 @@
       display: flex;
       align-items: center;
       font-size: 20px;
+      margin-left: 10px;
     }
   }
   .video__summary--description {

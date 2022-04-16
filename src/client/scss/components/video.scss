@@ -1,20 +1,51 @@
 .video-mixin {
+  box-shadow: 1px 1px 10px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 7px;
+  transition: all 0.2s ease-out;
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.2);
+  }
   .video-mixin__thumb {
-    height: 140px;
+    background-size: cover;
+    background-position: center;
     border-radius: 7px;
-    width: 100%;
     background-color: ivory;
+    width: 100%;
+    &::after {
+      content: "";
+      display: block;
+      padding-bottom: 70%;
+    }
   }
   .video-mixin__data {
+    margin: 10px 0;
     padding: 0px 15px;
-    .video-mixin__title {
-      font-size: 18px;
-      display: block;
-      margin-top: 10px;
+    display: flex;
+    align-items: center;
+    .video-mixin__data--avatar {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      img {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+      }
     }
-    .video-mixin__meta {
-      margin-top: 5px;
-      font-size: 12px;
+    .video-mixin__data--text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .video-mixin__title {
+        font-size: 18px;
+        display: block;
+        line-height: 1.2;
+      }
+      .video-mixin__meta {
+        margin-top: 5px;
+        font-size: 12px;
+      }
     }
   }
 }

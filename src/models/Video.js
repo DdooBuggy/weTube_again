@@ -8,10 +8,10 @@ const currenTime = () => {
   return `${year}.${month}.${date}`;
 };
 const videoSchema = new mongoose.Schema({
-  title: { type: String, required: true, trim: true, min: 2, max: 20 },
-  description: { type: String, required: true, trim: true, min: 2, max: 100 },
+  title: { type: String, required: true, trim: true, min: 2, max: 100 },
+  description: { type: String, required: true, trim: true, min: 2 },
   createdAt: { type: String, required: true, default: currenTime() },
-  hashtags: [{ type: String, trim: true, max: 20 }],
+  hashtags: [{ type: String, trim: true, max: 100 }],
   fileUrl: { type: String, required: true },
   thumbnailUrl: { type: String, required: true },
   meta: {
