@@ -22,8 +22,13 @@ const handlePlayClick = (event) => {
   playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 const handleKeydown = (event) => {
-  event.preventDefault(); // preventing space scroll
-  if (event.target.id !== "textarea" && event.code === "Space") {
+  console.log(event.target);
+  if (
+    event.target.id !== "textarea" &&
+    event.target.id !== "searchBar" &&
+    event.code === "Space"
+  ) {
+    event.preventDefault(); // preventing space scroll
     handlePlayClick();
   }
 };
